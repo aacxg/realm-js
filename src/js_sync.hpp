@@ -253,9 +253,9 @@ void UserClass<T>::set_permission(ContextType ctx, FunctionType, ObjectType this
             }
             Function::call(protected_ctx, protected_callback, 1, &error);
         },
-        [ctx] (auto &user, auto url) {
+        [ctx] (auto user, auto url) {
             Realm::Config config;
-            populate_sync_config_impl<T>(ctx, config, user, url, [](auto, auto) {});
+            populate_sync_config_impl<T>(ctx, config, std::move(user), url, [](auto, auto) {});
             return config;
         }
     );
@@ -283,9 +283,9 @@ void UserClass<T>::delete_permission(ContextType ctx, FunctionType, ObjectType t
             }
             Function::call(protected_ctx, protected_callback, 1, &error);
         },
-        [protected_ctx] (auto &user, auto url) {
+        [protected_ctx] (auto user, auto url) {
             Realm::Config config;
-            populate_sync_config_impl<T>(protected_ctx, config, user, url, [](auto, auto) {});
+            populate_sync_config_impl<T>(protected_ctx, config, std::move(user), url, [](auto, auto) {});
             return config;
         }
     );
@@ -312,9 +312,9 @@ void UserClass<T>::get_permissions(ContextType ctx, FunctionType, ObjectType thi
             }
             Function::call(protected_ctx, protected_callback, 2, args);
          },
-         [protected_ctx] (auto &user, auto url) {
+         [protected_ctx] (auto user, auto url) {
             Realm::Config config;
-            populate_sync_config_impl<T>(protected_ctx, config, user, url, [](auto, auto) {});
+            populate_sync_config_impl<T>(protected_ctx, config, std::move(user), url, [](auto, auto) {});
             return config;
          }
     );
@@ -570,7 +570,7 @@ void SyncClass<T>::populate_sync_config(ContextType ctx, ObjectType realm_constr
         }
 
         std::string raw_realm_url = Object::validated_get_string(ctx, sync_config_object, "url");
-        populate_sync_config_impl<T>(ctx, config, shared_user, raw_realm_url, error_handler);
+        populate_sync_config_impl<T>(ctx, config, std::move(shared_user), raw_realm_url, error_handler);
     }
 }
 
