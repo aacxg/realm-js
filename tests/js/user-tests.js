@@ -421,7 +421,7 @@ module.exports = {
           //TestCase.assertEqual(results.length, 2);
           if (results.length == 2) {
             console.log(results);
-            resolve();
+            setTimeout(resolve, 0);
           }
         });
   
